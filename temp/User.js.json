@@ -1,0 +1,67 @@
+{
+  "data": {
+    "propertyOrder": {},
+    "properties": {
+      "password": {
+        "name": "password",
+        "reference": "scalar",
+        "length": 255,
+        "hidden": true,
+        "getter": false,
+        "setter": false,
+        "type": "string"
+      },
+      "email": {
+        "name": "email",
+        "reference": "scalar",
+        "length": 50,
+        "getter": false,
+        "setter": false,
+        "type": "string"
+      }
+    },
+    "props": [
+      {
+        "name": "password",
+        "reference": "scalar",
+        "length": 255,
+        "hidden": true,
+        "getter": false,
+        "setter": false,
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "reference": "scalar",
+        "length": 50,
+        "getter": false,
+        "setter": false,
+        "type": "string"
+      }
+    ],
+    "primaryKeys": [],
+    "filters": {},
+    "hooks": {},
+    "indexes": [],
+    "uniques": [
+      {
+        "properties": "email"
+      }
+    ],
+    "checks": [],
+    "concurrencyCheckKeys": {},
+    "className": "User",
+    "path": "./dist/users/entities/user.entity.js",
+    "collection": "AppUsers",
+    "name": "User",
+    "abstract": false,
+    "constructorParams": [],
+    "toJsonParams": [],
+    "extends": "BaseEntity",
+    "useCache": true,
+    "relations": []
+  },
+  "origin": "./dist/users/entities/user.entity.js",
+  "hash": "04c55ea5ffbccb6c2f4b97882f0b53be",
+  "version": "5.4.2"
+}
