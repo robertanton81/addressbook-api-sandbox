@@ -7,7 +7,7 @@ import {
 import { BaseEntity } from '../../common/entities/base.entity';
 import { UsersRepository } from '../users.repository';
 
-@Entity({ customRepository: () => UsersRepository, tableName: 'AppUsers' })
+@Entity({ customRepository: () => UsersRepository })
 export class User extends BaseEntity {
   [EntityRepositoryType]?: UsersRepository;
 

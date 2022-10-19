@@ -51,17 +51,17 @@
     "checks": [],
     "concurrencyCheckKeys": {},
     "className": "User",
-    "path": "./dist/users/entities/user.entity.js",
-    "collection": "AppUsers",
+    "path": "./dist/src/users/entities/user.entity.js",
     "name": "User",
     "abstract": false,
     "constructorParams": [],
     "toJsonParams": [],
     "extends": "BaseEntity",
     "useCache": true,
-    "relations": []
+    "relations": [],
+    "collection": "user"
   },
-  "origin": "./dist/users/entities/user.entity.js",
-  "hash": "04c55ea5ffbccb6c2f4b97882f0b53be",
+  "origin": "./dist/src/users/entities/user.entity.js",
+  "hash": "b608b3a882fb869e66559896462d4cf7",
   "version": "5.4.2"
 }

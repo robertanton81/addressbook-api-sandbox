@@ -22,6 +22,7 @@ async function bootstrap() {
 
   // DANGER! this just overwrites database with schema defined based on entities !!!
   await app.get(MikroORM).getSchemaGenerator().ensureDatabase();
+  await app.get(MikroORM).getMigrator().up();
   // await app.get(MikroORM).getSchemaGenerator().updateSchema();
 
   app.useGlobalPipes(

@@ -71,7 +71,7 @@
     "checks": [],
     "concurrencyCheckKeys": {},
     "className": "BaseEntity",
-    "path": "./dist/common/entities/base.entity.js",
+    "path": "./dist/src/common/entities/base.entity.js",
     "abstract": true,
     "constructorParams": [],
     "toJsonParams": [],
@@ -79,7 +79,7 @@
     "compositePK": false,
     "relations": []
   },
-  "origin": "./dist/common/entities/base.entity.js",
+  "origin": "./dist/src/common/entities/base.entity.js",
   "hash": "cfc6db6f41505fe28b3cfca0ca20b3e1",
   "version": "5.4.2"
 }

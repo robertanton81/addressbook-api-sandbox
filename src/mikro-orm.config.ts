@@ -22,6 +22,10 @@ const mikroOrmConfig: Options = {
   logger: logger.log.bind(logger),
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
+  migrations: {
+    path: 'dist/migrations',
+    pathTs: 'src/migrations',
+  },
   cache: {
     enabled: true,
     pretty: true,
