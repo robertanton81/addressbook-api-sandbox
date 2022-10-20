@@ -5,7 +5,7 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../../common/entities/base.entity';
-import { UsersRepository } from '../users.repository';
+import { UsersRepository } from '../repository/users.repository';
 
 @Entity({ customRepository: () => UsersRepository })
 export class User extends BaseEntity {

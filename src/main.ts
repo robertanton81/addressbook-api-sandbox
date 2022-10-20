@@ -1,5 +1,9 @@
 import { MikroORM } from '@mikro-orm/core';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -8,6 +12,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { IAppConfig } from './app.config';
 import { AppModule } from './app.module';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -30,6 +35,10 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
     }),
+  );
+
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(TsMorphMetadataProvider)),
   );
 
   await app.listen(appConfig.port);
