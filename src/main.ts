@@ -5,7 +5,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -37,9 +37,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(app.get(TsMorphMetadataProvider)),
-  );
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   await app.listen(appConfig.port);
 
