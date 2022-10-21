@@ -12,24 +12,26 @@ import {
 } from '@nestjs/platform-fastify';
 import { IAppConfig } from './app.config';
 import { AppModule } from './app.module';
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+import fastifyHelmet from '@fastify/helmet';
 
+// TODO: add swagger
+// TODO: add HMR webpack
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
-    { cors: true },
+    { cors: true, logger: ['error', 'warn', 'log'] },
   );
 
-  // Get app config for cors settings and starting the app.
   const configService = app.get(ConfigService);
   const appConfig = configService.get<IAppConfig>('app');
 
-  // DANGER! this just overwrites database with schema defined based on entities !!!
   await app.get(MikroORM).getSchemaGenerator().ensureDatabase();
   await app.get(MikroORM).getMigrator().up();
-  // await app.get(MikroORM).getSchemaGenerator().updateSchema();
+  // setup globaly basic security headers
+  await app.register(fastifyHelmet);
 
+  // setup validation pipes for every endpoint
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -37,6 +39,7 @@ async function bootstrap() {
     }),
   );
 
+  // setup serialization for every endpoint
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   await app.listen(appConfig.port);
@@ -44,4 +47,5 @@ async function bootstrap() {
   Logger.log(`listening on ${appConfig.port}`);
   Logger.log(`Runinng in ${appConfig.env}`);
 }
+
 bootstrap();

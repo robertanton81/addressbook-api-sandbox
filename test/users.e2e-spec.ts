@@ -45,6 +45,7 @@ describe('Users controller (e2e)', () => {
           });
       });
 
+      //TODO: add seeder
       it(`should fail due to unique constraint validation`, () => {
         const createUserDto: CreateUserDto = {
           email: 'e2e_test@e2e.com',
