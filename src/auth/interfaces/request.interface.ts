@@ -1,5 +1,8 @@
+import { IHeaders } from './headers.interface';
+
 export interface IRequestWithUser extends Request {
-  auth: {
+  user: {
     email: string;
   };
+  headers: IHeaders;
 }

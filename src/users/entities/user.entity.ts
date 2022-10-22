@@ -7,6 +7,7 @@ import {
 import { BaseEntity } from '../../common/entities/base.entity';
 import { UsersRepository } from '../repository/users.repository';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity({ customRepository: () => UsersRepository })
 export class User extends BaseEntity {
@@ -14,6 +15,7 @@ export class User extends BaseEntity {
 
   @ApiProperty()
   @Property({ length: 255, hidden: true })
+  @Exclude()
   password!: string;
 
   @ApiProperty()

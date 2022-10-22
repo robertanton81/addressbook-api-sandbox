@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { LogInDto } from '../dto/logIn.dto';
 import { RegisterUserDto } from '../dto/register-user.dto';
@@ -17,6 +9,7 @@ import { CatchUnauthorisedException } from '../../common/decorators/catch-wrong-
 import { CatchAll } from '../../common/decorators/try-catch-decorator';
 import { ApiRegisterUser } from '../decorators/api-register-user.decorator';
 import { IRequestWithUser } from '../interfaces/request.interface';
+import { ExtractJwt } from 'passport-jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -43,6 +36,8 @@ export class AuthController {
   @UseGuards(JwtAuthenticationGuard)
   @Get()
   authenticate(@Req() request: IRequestWithUser) {
-    const { auth } = request;
+    const token = ExtractJwt.fromAuthHeaderAsBearerToken()(request as any);
+
+    return this.authenticationService.getUserFromAuthenticationToken(token);
   }
 }

@@ -4,6 +4,7 @@ import { UsersRepository } from '../repository/users.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { usersRepositoryMock } from '../repository/users.repository.mock';
+import { setMocker } from '../../common/utils/mocker.utils';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -20,12 +21,7 @@ describe('UsersService', () => {
         }
 
         if (typeof token === 'function') {
-          const mockMetadata = moduleMocker.getMetadata(
-            token,
-          ) as MockFunctionMetadata<any, any>;
-          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-
-          return new Mock();
+          setMocker(token);
         }
       })
       .compile();
