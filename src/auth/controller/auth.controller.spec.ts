@@ -5,6 +5,10 @@ import { mockedJwtService } from '../service/jwt.service.mock';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../../users/service/users.service';
 import { mockedUserService } from '../../users/service/users.service.mock';
+import { functionMocker } from '../../common/mocks/mocker.helper';
+import { authConfig } from '../auth.config';
+import { authConfigMock } from '../auth.config.mock';
+import { AuthService } from '../service/auth.service';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -14,7 +18,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [],
+      providers: [AuthService],
     })
       .useMocker((token) => {
         if (token === JwtService) {
@@ -24,13 +28,12 @@ describe('AuthController', () => {
           return mockedUserService;
         }
 
-        if (typeof token === 'function') {
-          const mockMetadata = moduleMocker.getMetadata(
-            token,
-          ) as MockFunctionMetadata<any, any>;
-          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+        if (token === authConfig.KEY) {
+          return authConfigMock;
+        }
 
-          return new Mock();
+        if (typeof token === 'function') {
+          functionMocker(token);
         }
       })
       .compile();
