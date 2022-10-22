@@ -5,6 +5,9 @@ import { dbConfig } from './database/database.config';
 import { appConfig, validateAppConfig } from './app.config';
 import { DatabaseModule } from './database/database.module';
 import { getEnvPath } from './env-helper';
+import { AppLogerModule } from './app-loger/app-loger.module';
+import { ExceptionsInterceptor } from './common/interceptors/exceptions.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 const envFilePath: string = getEnvPath();
 
@@ -19,8 +22,15 @@ const envFilePath: string = getEnvPath();
     }),
     DatabaseModule,
     UsersModule,
+    AppLogerModule,
+    AppLogerModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ExceptionsInterceptor,
+    },
+  ],
 })
 export class AppModule {}

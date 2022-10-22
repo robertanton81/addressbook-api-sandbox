@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { CatchUniqueConstraintViolation } from '../../common/decorators/catch-unique-constraint-violation.decorator';
@@ -16,7 +10,7 @@ export class UsersController {
 
   @Post()
   @CatchAll((err) => {
-    throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    throw err;
   })
   @CatchUniqueConstraintViolation()
   create(@Body() createUserDto: CreateUserDto) {

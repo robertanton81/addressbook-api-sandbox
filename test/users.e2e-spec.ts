@@ -1,18 +1,16 @@
 import { MikroORM } from '@mikro-orm/core';
+import { HttpStatus } from '@nestjs/common';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { UsersService } from '../src/users/service/users.service';
+import { TestSeeder } from '../seeders/TestSeeder';
 import { AppModule } from '../src/app.module';
 import { CreateUserDto } from '../src/users/dto/create-user.dto';
-import { HttpStatus } from '@nestjs/common';
 
 describe('Users controller (e2e)', () => {
   let app: NestFastifyApplication;
-  let usersService: UsersService;
-
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [AppModule],
@@ -26,8 +24,7 @@ describe('Users controller (e2e)', () => {
 
     await app.get(MikroORM).getSchemaGenerator().ensureDatabase();
     await app.get(MikroORM).getSchemaGenerator().updateSchema();
-
-    usersService = app.get(UsersService);
+    await app.get(MikroORM).getSeeder().seed(TestSeeder);
   });
 
   describe('creating a user', () => {
@@ -45,10 +42,9 @@ describe('Users controller (e2e)', () => {
           });
       });
 
-      //TODO: add seeder
       it(`should fail due to unique constraint validation`, () => {
         const createUserDto: CreateUserDto = {
-          email: 'e2e_test@e2e.com',
+          email: 'e2e_test_2@e2e.com',
           password: 'e2e_password',
         };
 

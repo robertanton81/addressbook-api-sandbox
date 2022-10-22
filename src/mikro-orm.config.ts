@@ -29,7 +29,15 @@ const mikroOrmConfig: Options = {
   entitiesTs: ['src/**/*.entity.ts'],
   migrations: {
     path: 'dist/migrations',
-    pathTs: 'src/migrations',
+    pathTs: './migrations',
+  },
+  seeder: {
+    path: 'dist/seeders',
+    pathTs: './seeders',
+    defaultSeeder: 'TestSeeder',
+    glob: '!(*.d).{js,ts}',
+    emit: 'ts',
+    fileName: (className: string) => className,
   },
   cache: {
     enabled: true,
