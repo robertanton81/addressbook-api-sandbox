@@ -8,6 +8,7 @@ import { getEnvPath } from './env-helper';
 import { AppLogerModule } from './app-loger/app-loger.module';
 import { ExceptionsInterceptor } from './common/interceptors/exceptions.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AuthModule } from './auth/auth.module';
 
 const envFilePath: string = getEnvPath();
 
@@ -24,6 +25,7 @@ const envFilePath: string = getEnvPath();
     UsersModule,
     AppLogerModule,
     AppLogerModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [
