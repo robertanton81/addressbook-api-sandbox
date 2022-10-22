@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@fastify/helmet": "^10.0.2",
+    "@fastify/static": "^6.5.0",
     "@mikro-orm/cli": "^5.4.2",
     "@mikro-orm/core": "^5.4.2",
     "@mikro-orm/migrations": "^5.4.2",
@@ -37,6 +38,7 @@
     "@nestjs/mapped-types": "^1.2.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-fastify": "^9.1.4",
+    "@nestjs/swagger": "^6.1.2",
     "bcrypt": "^5.1.0",
     "class-sanitizer": "^1.0.1",
     "class-transformer": "^0.5.1",
@@ -87,7 +89,10 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": "ts-jest",
+      "astTransformers": {
+        "before": ["../test/swagger-transformer.ts"]
+      }
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

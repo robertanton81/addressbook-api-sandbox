@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class DataBaseConnectionException extends HttpException {
+export class DatabaseConnectionException extends HttpException {
   constructor() {
     super(
       'I am sorry but database seems to be OOO',

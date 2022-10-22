@@ -15,7 +15,12 @@ import { AppModule } from './app.module';
 import fastifyHelmet from '@fastify/helmet';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { ExceptionsInterceptor } from './common/interceptors/exceptions.interceptor';
-import { DataBaseConnectionException } from './common/exceptions/DataBaseConnectionException';
+import { DatabaseConnectionException } from './common/exceptions/database-connection.exception';
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 
 // TODO: add swagger
 // TODO: add HMR webpack
@@ -41,7 +46,7 @@ async function bootstrap() {
     await app.get(MikroORM).getSchemaGenerator().ensureDatabase();
     await app.get(MikroORM).getMigrator().up();
   } catch (e) {
-    const connErr = new DataBaseConnectionException();
+    const connErr = new DatabaseConnectionException();
     logger.error(`errCode: ${e.errno} ${connErr.message}`);
   }
 
@@ -59,9 +64,26 @@ async function bootstrap() {
   // setup serialization for every endpoint
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
+  const config = new DocumentBuilder()
+    .setTitle('Address book example')
+    .setDescription('The strv-addressbook-anton-robert API description')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  const customSwaggerOption: SwaggerCustomOptions = {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+    customSiteTitle: 'strv-address-book API Docs',
+  };
+
+  SwaggerModule.setup('api', app, document, customSwaggerOption);
+
+  // start the app
   await app.listen(appConfig.port);
   logger.log(`listening on ${appConfig.port}`);
-  logger.log(`Runinng in ${appConfig.env}`);
+  logger.log(`Running in ${appConfig.env}`);
 }
 
 bootstrap();

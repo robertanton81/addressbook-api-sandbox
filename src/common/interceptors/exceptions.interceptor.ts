@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DataBaseConnectionException } from '../exceptions/DataBaseConnectionException';
+import { DatabaseConnectionException } from '../exceptions/database-connection.exception';
 
 @Injectable()
 export class ExceptionsInterceptor implements NestInterceptor {
@@ -15,7 +15,7 @@ export class ExceptionsInterceptor implements NestInterceptor {
       catchError((err) => {
         return throwError(() => {
           if (err.code === 'ECONNREFUSED') {
-            throw new DataBaseConnectionException();
+            throw new DatabaseConnectionException();
           }
 
           return err;
