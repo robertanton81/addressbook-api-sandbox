@@ -6,10 +6,7 @@ export class DatabaseConnectionExceptionDto {
   statusCode: number;
 
   @ApiProperty({
-    example: {
-      statusCode: 503,
-      message: 'I am sorry but database seems to be OOO',
-    },
+    example: 'I am sorry but database seems to be OOO',
   })
   message: string;
 }

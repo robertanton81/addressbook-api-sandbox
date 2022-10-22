@@ -5,20 +5,10 @@ import { UsersService } from '../../users/service/users.service';
 import { LogInDto } from '../dto/logIn.dto';
 import { RegisterUserDto } from '../dto/register-user.dto';
 import TokenPayload from '../interfaces/token-payload.interface';
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiResponse,
-} from '@nestjs/swagger';
-import { CreateUserDto } from '../../users/dto/create-user.dto';
-import { User } from '../../users/entities/user.entity';
-import { UniqueEntityConstraintViolationExceptionDto } from '../../common/exceptions/dtos/unique-entity-constraint-violation.exception.dto';
-import { DatabaseConnectionExceptionDto } from '../../common/exceptions/dtos/database-connection.exception';
-import { CatchAll } from '../../common/decorators/try-catch-decorator';
 import { RegisterUserResponseDto } from '../dto/register-user-response.dto';
 import { ConfigType } from '@nestjs/config';
 import { authConfig } from '../auth.config';
+import { WrongCredentialsException } from '../../common/exceptions/wrong-credentials.exception';
 
 @Injectable()
 export class AuthService {
@@ -29,6 +19,19 @@ export class AuthService {
     private authConfigService: ConfigType<typeof authConfig>,
   ) {}
 
+  private async verifyPassword(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) {
+    const isPasswordMatching = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword,
+    );
+    if (!isPasswordMatching) {
+      throw new WrongCredentialsException();
+    }
+  }
+
   public async login(loginData: LogInDto) {
     const { email, password } = loginData;
     const user = await this.usersService.getByEmail(email);
@@ -37,34 +40,6 @@ export class AuthService {
     return { accessToken: this.jwtService.sign({ email }) };
   }
 
-  @ApiBody({
-    type: CreateUserDto,
-    required: true,
-    examples: {
-      CreateUserDto: {
-        summary: 'values for creating user',
-        value: {
-          email: 'test@email.com',
-          password: 'someStrongPassword',
-        },
-      },
-    },
-  })
-  @ApiCreatedResponse({ description: 'user successfully created', type: User })
-  @ApiResponse({
-    status: HttpStatus.CONFLICT,
-    description: 'User exists',
-    type: UniqueEntityConstraintViolationExceptionDto,
-  })
-  @ApiBadRequestResponse({ description: 'bad request' })
-  @ApiResponse({
-    status: HttpStatus.SERVICE_UNAVAILABLE,
-    description: 'database connection error',
-    type: DatabaseConnectionExceptionDto,
-  })
-  @CatchAll((err) => {
-    throw err;
-  })
   public async register(
     registrationData: RegisterUserDto,
   ): Promise<RegisterUserResponseDto> {
@@ -76,7 +51,7 @@ export class AuthService {
     });
 
     return {
-      accessToken: this.getCookieWithJwtAccessToken(registrationData.email),
+      accessToken: this.getJwtAccessToken(registrationData.email),
     };
   }
 
@@ -94,22 +69,6 @@ export class AuthService {
     }
   }
 
-  private async verifyPassword(
-    plainTextPassword: string,
-    hashedPassword: string,
-  ) {
-    const isPasswordMatching = await bcrypt.compare(
-      plainTextPassword,
-      hashedPassword,
-    );
-    if (!isPasswordMatching) {
-      throw new HttpException(
-        'Wrong credentials provided',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
   public async getUserFromAuthenticationToken(token: string) {
     const payload: TokenPayload = this.jwtService.verify(token);
     if (payload.email) {
@@ -117,12 +76,7 @@ export class AuthService {
     }
   }
 
-  public getCookieWithJwtAccessToken(email: string) {
-    const payload: TokenPayload = { email };
-    const expiresIn = `${this.authConfigService.JWT_TOKEN_EXPIRES}`;
-
-    const token = this.jwtService.sign(payload);
-
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiresIn}`;
+  public getJwtAccessToken(email: string) {
+    return this.jwtService.sign({ email });
   }
 }
