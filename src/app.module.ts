@@ -9,6 +9,7 @@ import { AppLogerModule } from './app-loger/app-loger.module';
 import { ExceptionsInterceptor } from './common/interceptors/exceptions.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
+import { authConfig } from './auth/auth.config';
 
 const envFilePath: string = getEnvPath();
 
@@ -17,7 +18,7 @@ const envFilePath: string = getEnvPath();
     ConfigModule.forRoot({
       envFilePath,
       isGlobal: true,
-      load: [appConfig, dbConfig],
+      load: [appConfig, dbConfig, authConfig],
       cache: true,
       validate: validateAppConfig,
     }),

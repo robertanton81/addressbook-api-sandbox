@@ -12,4 +12,8 @@ export class UsersService {
     await this.userRepository.persistAndFlush(newUser);
     return newUser;
   }
+
+  async getByEmail(email: string) {
+    return this.userRepository.findOneOrFail({ email });
+  }
 }

@@ -1,42 +1,48 @@
 import {
+  Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
+  HttpCode,
   Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
+  Req,
+  Res,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { CreateAuthDto } from '../dto/create-auth.dto';
-import { UpdateAuthDto } from '../dto/update-auth.dto';
+import { LogInDto } from '../dto/logIn.dto';
+import { RegisterUserDto } from '../dto/register-user.dto';
+import JwtAuthenticationGuard from '../guards/jwt-auth.guard';
+import { RegisterUserResponseDto } from '../dto/register-user-response.dto';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authenticationService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('register')
+  async register(
+    @Body() registrationData: RegisterUserDto,
+  ): Promise<RegisterUserResponseDto> {
+    return this.authenticationService.register(registrationData);
   }
 
+  @HttpCode(200)
+  @Post('token')
+  @ApiBody({ type: LogInDto })
+  async logIn(@Body() loginData: LogInDto) {
+    return this.authenticationService.login(loginData);
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
   @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  authenticate(@Req() request, @Res() reply) {
+    const { user } = request;
+    const cookie = this.authenticationService.getCookieWithJwtAccessToken(
+      user.email,
+    );
+    reply.header('Set-Cookie', [cookie]);
   }
 }
