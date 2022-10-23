@@ -22,4 +22,9 @@ export class User extends BaseEntity {
   @Unique()
   @Property({ length: 50, hidden: true })
   email: string;
+
+  @ApiProperty()
+  @Property({ length: 255, hidden: true })
+  @Exclude()
+  firebaseId!: string;
 }

@@ -8,10 +8,16 @@ import { CatchNotFoundException } from '../../common/decorators/catch-not-found.
 export class UsersService {
   constructor(private readonly userRepository: UsersRepository) {}
 
-  async create(user: CreateUserDto) {
+  async create(user: CreateUserDto, flush: boolean) {
     const newUser = this.userRepository.create<User>(user);
-    await this.userRepository.persistAndFlush(newUser);
+    if (flush) {
+      await this.userRepository.persistAndFlush(newUser);
+    }
     return newUser;
+  }
+
+  async persist(user: User) {
+    return this.userRepository.persistAndFlush(user);
   }
 
   @CatchNotFoundException()

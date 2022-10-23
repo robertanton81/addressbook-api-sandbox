@@ -5,8 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../../users/service/users.service';
 import { mockedUserService } from '../../users/service/users.service.mock';
 import { functionMocker } from '../../common/mocks/mocker.helper';
-import { authConfig } from '../auth.config';
-import { authConfigMock } from '../auth.config.mock';
+import { authConfig } from '../config/auth.config';
+import { authConfigMock } from '../config/auth.config.mock';
 import { AuthService } from '../service/auth.service';
 
 describe('AuthController', () => {

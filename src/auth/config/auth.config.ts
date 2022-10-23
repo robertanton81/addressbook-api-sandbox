@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { IsString } from 'class-validator';
-import { validateConfig } from '../common/validation/config.validate';
+import { validateConfig } from '../../common/validation/config.validate';
 
 const authConfig = registerAs('auth', () => ({
   JWT_SECRET: process.env.JWT_SECRET,

@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { validateConfig } from './common/validation/config.validate';
+import { validateConfig } from '../common/validation/config.validate';
 
 interface IAppConfig {
   port: number;

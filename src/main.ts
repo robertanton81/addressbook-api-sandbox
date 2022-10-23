@@ -5,10 +5,10 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { IAppConfig } from './app.config';
+import { IAppConfig } from './config/app.config';
 import { AppModule } from './app.module';
 import fastifyHelmet from '@fastify/helmet';
-import { configureSwagger } from './config/swagger/configureSwagger';
+import { configureSwagger } from './config/swagger/configure-swagger';
 import { configureLogger } from './config/logger/configure.logger';
 import { configureDb } from './database/configure.database';
 

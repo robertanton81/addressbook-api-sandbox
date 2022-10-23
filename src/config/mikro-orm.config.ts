@@ -2,9 +2,9 @@ import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { dbConfig, validateDbConfig } from './database/database.config';
+import { dbConfig, validateDbConfig } from '../database/database.config';
 import { Options } from '@mikro-orm/core';
-import { getEnvPath } from './config/get-env-path';
+import { getEnvPath } from './get-env-path';
 import * as dotenv from 'dotenv';
 
 const configService = new ConfigService();
