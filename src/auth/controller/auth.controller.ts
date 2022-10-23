@@ -32,12 +32,4 @@ export class AuthController {
   async logIn(@Body() loginData: LogInDto) {
     return this.authenticationService.login(loginData);
   }
-
-  @UseGuards(JwtAuthenticationGuard)
-  @Get()
-  authenticate(@Req() request: IRequestWithUser) {
-    const token = ExtractJwt.fromAuthHeaderAsBearerToken()(request as any);
-
-    return this.authenticationService.getUserFromAuthenticationToken(token);
-  }
 }

@@ -17,6 +17,7 @@ describe('CreateUserDto', () => {
       expect(err.getResponse().message).toEqual([
         'email should not be empty',
         'email must be an email',
+        'password must be longer than or equal to 7 characters',
         'password must be a string',
         'password should not be empty',
       ]);

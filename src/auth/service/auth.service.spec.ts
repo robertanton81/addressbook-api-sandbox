@@ -112,14 +112,11 @@ describe('AuthService', () => {
 
     describe('and using valid credentials', () => {
       it('should return access token', async () => {
-        const createUserDto: LogInDto = {
+        const logInDto: LogInDto = {
           email: 'test@test.com',
           password: 'tes3',
         };
-        const authUser = await service.getAuthenticatedUser(
-          createUserDto.email,
-          createUserDto.password,
-        );
+        const authUser = await service.login(logInDto);
 
         expect(authUser).toMatchObject(authUser);
       });

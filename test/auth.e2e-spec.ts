@@ -135,7 +135,7 @@ describe('Auth controller (e2e)', () => {
           });
       });
 
-      it(`should fail due to wrong credentials`, () => {
+      it(`should fail due to wrong password`, () => {
         const createUserDto: CreateUserDto = {
           email: 'e2e_test_2@e2e.com',
           password: 'e2e_passwrd',
@@ -148,6 +148,24 @@ describe('Auth controller (e2e)', () => {
             payload: createUserDto,
           })
           .then((res) => {
+            return expect(res.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+          });
+      });
+
+      it(`should fail due to non existing user`, () => {
+        const createUserDto: CreateUserDto = {
+          email: 'e@e2e.com',
+          password: 'e2e_passwrd',
+        };
+
+        return app
+          .inject({
+            method: 'POST',
+            url: '/auth/login',
+            payload: createUserDto,
+          })
+          .then((res) => {
+            expect(JSON.parse(res.body));
             return expect(res.statusCode).toBe(HttpStatus.UNAUTHORIZED);
           });
       });
