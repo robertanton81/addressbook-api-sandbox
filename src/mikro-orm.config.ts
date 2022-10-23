@@ -4,13 +4,13 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { dbConfig, validateDbConfig } from './database/database.config';
 import { Options } from '@mikro-orm/core';
-import { getEnvPath } from './env-helper';
+import { getEnvPath } from './config/get-env-path';
 import * as dotenv from 'dotenv';
 
 const configService = new ConfigService();
 const logger = new Logger('MikroORM');
 
-const envFilePath = getEnvPath();
+const envFilePath = getEnvPath(__dirname);
 dotenv.config({ path: envFilePath });
 
 validateDbConfig(dbConfig());

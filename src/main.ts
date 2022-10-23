@@ -1,11 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
-import {
-  BadRequestException,
-  ClassSerializerInterceptor,
-  Logger as NestLogger,
-  ValidationError,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import {
@@ -15,14 +8,9 @@ import {
 import { IAppConfig } from './app.config';
 import { AppModule } from './app.module';
 import fastifyHelmet from '@fastify/helmet';
-import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
-import { ExceptionsInterceptor } from './common/interceptors/exceptions.interceptor';
-import { DatabaseConnectionException } from './common/exceptions/database-connection.exception';
-import {
-  DocumentBuilder,
-  SwaggerCustomOptions,
-  SwaggerModule,
-} from '@nestjs/swagger';
+import { configureSwagger } from './config/swagger/configureSwagger';
+import { configureLogger } from './config/logger/configure.logger';
+import { configureDb } from './database/configure.database';
 
 // TODO: add HMR webpack
 async function bootstrap() {
@@ -35,23 +23,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const appConfig = configService.get<IAppConfig>('app');
 
-  // setup logger
-  app.useLogger(app.get(Logger));
-  app.useGlobalInterceptors(
-    new LoggerErrorInterceptor(),
-    new ExceptionsInterceptor(),
-  );
-  const logger = new NestLogger('startup');
-
-  // setup db
-  try {
-    await app.get(MikroORM).getSchemaGenerator().ensureDatabase();
-    await app.get(MikroORM).getMigrator().up();
-  } catch (e) {
-    const connErr = new DatabaseConnectionException();
-    logger.error(`errCode: ${e.errno} ${connErr.message}`);
-  }
-
+  const logger = configureLogger(app);
+  await configureDb(app, logger);
   // setup globally basic security headers
   await app.register(fastifyHelmet);
 
@@ -65,22 +38,7 @@ async function bootstrap() {
 
   // setup serialization for every endpoint
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
-  const config = new DocumentBuilder()
-    .setTitle('Address book example')
-    .setDescription('The strv-addressbook-anton-robert API description')
-    .setVersion('1.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  const customSwaggerOption: SwaggerCustomOptions = {
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-    customSiteTitle: 'strv-address-book API Docs',
-  };
-
-  SwaggerModule.setup('api', app, document, customSwaggerOption);
+  configureSwagger(app);
 
   // start the app
   await app.listen(appConfig.port);

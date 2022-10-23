@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { dbConfig } from './database/database.config';
 import { appConfig, validateAppConfig } from './app.config';
 import { DatabaseModule } from './database/database.module';
-import { getEnvPath } from './env-helper';
+import { getEnvPath } from './config/get-env-path';
 import { AppLogerModule } from './app-loger/app-loger.module';
 import { ExceptionsInterceptor } from './common/interceptors/exceptions.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { authConfig } from './auth/auth.config';
 import { FirebaseModule } from './firebase/firebase.module';
 
-const envFilePath: string = getEnvPath();
+const envFilePath: string = getEnvPath(__dirname);
 
 @Module({
   imports: [
