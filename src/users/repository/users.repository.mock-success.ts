@@ -1,6 +1,7 @@
 import { CreateUserDto } from '../dto/create-user.dto';
+import { LogInDto } from '../../auth/dto/logIn.dto';
 
-export const usersRepositoryMock = {
+export const mockedUsersRepositorySuccess = {
   persistAndFlush: jest.fn().mockImplementation((dto: CreateUserDto) => {
     return Promise.resolve({
       ...dto,
@@ -10,5 +11,8 @@ export const usersRepositoryMock = {
     return Promise.resolve({
       ...dto,
     });
+  }),
+  findOneOrFail: jest.fn().mockImplementation((dto: LogInDto) => {
+    return Promise.resolve({ ...dto });
   }),
 };

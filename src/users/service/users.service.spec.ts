@@ -2,11 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { UsersRepository } from '../repository/users.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { usersRepositoryMock } from '../repository/users.repository.mock';
+import { mockedUsersRepositorySuccess } from '../repository/users.repository.mock-success';
 import { functionMocker } from '../../common/mocks/mocker.helper';
-
-const moduleMocker = new ModuleMocker(global);
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -17,7 +14,7 @@ describe('UsersService', () => {
     })
       .useMocker((token) => {
         if (token === UsersRepository) {
-          return usersRepositoryMock;
+          return mockedUsersRepositorySuccess;
         }
 
         if (typeof token === 'function') {

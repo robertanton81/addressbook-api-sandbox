@@ -1,7 +1,9 @@
 import { MikroORM } from '@mikro-orm/core';
 import {
+  BadRequestException,
   ClassSerializerInterceptor,
   Logger as NestLogger,
+  ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -22,7 +24,6 @@ import {
   SwaggerModule,
 } from '@nestjs/swagger';
 
-// TODO: add swagger
 // TODO: add HMR webpack
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -36,10 +37,11 @@ async function bootstrap() {
 
   // setup logger
   app.useLogger(app.get(Logger));
-  app.useGlobalInterceptors(new LoggerErrorInterceptor());
+  app.useGlobalInterceptors(
+    new LoggerErrorInterceptor(),
+    new ExceptionsInterceptor(),
+  );
   const logger = new NestLogger('startup');
-
-  app.useGlobalInterceptors(new ExceptionsInterceptor());
 
   // setup db
   try {

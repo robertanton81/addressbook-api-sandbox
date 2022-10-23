@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
-import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { mockedJwtService } from '../service/jwt.service.mock';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../../users/service/users.service';
@@ -9,8 +8,6 @@ import { functionMocker } from '../../common/mocks/mocker.helper';
 import { authConfig } from '../auth.config';
 import { authConfigMock } from '../auth.config.mock';
 import { AuthService } from '../service/auth.service';
-
-const moduleMocker = new ModuleMocker(global);
 
 describe('AuthController', () => {
   let controller: AuthController;
