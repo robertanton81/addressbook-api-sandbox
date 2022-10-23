@@ -10,6 +10,7 @@ import { ExceptionsInterceptor } from './common/interceptors/exceptions.intercep
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { authConfig } from './auth/auth.config';
+import { FirebaseModule } from './firebase/firebase.module';
 
 const envFilePath: string = getEnvPath();
 
@@ -27,6 +28,7 @@ const envFilePath: string = getEnvPath();
     AppLogerModule,
     AppLogerModule,
     AuthModule,
+    FirebaseModule,
   ],
   controllers: [],
   providers: [
