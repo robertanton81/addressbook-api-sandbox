@@ -12,6 +12,9 @@ WORKDIR /usr/src/app
 # Copying this first prevents re-running npm install on every code change.
 COPY --chown=node:node package*.json ./
 
+
+COPY '../config/firebase-adminsdk-strv-address-book.json' /usr/src/app/firebase/config/
+
 # Install app dependencies using the `npm ci` command instead of `npm install`
 RUN npm ci
 
