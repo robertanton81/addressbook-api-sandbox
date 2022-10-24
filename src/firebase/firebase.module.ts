@@ -6,11 +6,14 @@ import {
 } from './config/firebase.config';
 import { getEnvPath } from '../config/get-env-path';
 import { FirebaseService } from './service/firebase.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { FirebaseUser } from './entities/firebase-user.entity';
 
 const envFilePath = getEnvPath(__dirname);
 
 @Module({
   imports: [
+    MikroOrmModule.forFeature({ entities: [FirebaseUser] }),
     // just to show that each module can have own env file and separate validation
     ConfigModule.forRoot({
       envFilePath,

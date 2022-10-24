@@ -52,20 +52,20 @@ export class AuthService {
   ): Promise<RegisterUserResponseDto> {
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
 
-    // todo: need to create user in transaction and persist only when firebase succeeds
-    const userInstance = await this.usersService.create(
-      {
-        ...registrationData,
-        password: hashedPassword,
-      },
-      false,
-    );
-
     const fireBAseUser = await this.firebaseService.createFirebaseUser(
       registrationData,
     );
 
-    await this.usersService.persist(userInstance);
+    if (fireBAseUser.uid) {
+      // todo: need to create user in transaction and persist only when firebase succeeds
+      const userInstance = await this.usersService.create({
+        ...registrationData,
+        password: hashedPassword,
+        firebaseUser: {
+          firebaseUuid: fireBAseUser.uid,
+        },
+      });
+    }
 
     return {
       accessToken: this.getJwtAccessToken(registrationData.email),

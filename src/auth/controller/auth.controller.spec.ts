@@ -8,6 +8,8 @@ import { functionMocker } from '../../common/mocks/mocker.helper';
 import { authConfig } from '../config/auth.config';
 import { authConfigMock } from '../config/auth.config.mock';
 import { AuthService } from '../service/auth.service';
+import { FirebaseService } from '../../firebase/service/firebase.service';
+import { mockedFirebaseServiceSuccess } from '../../firebase/service/firebase.service.mock-success';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -23,6 +25,9 @@ describe('AuthController', () => {
         }
         if (token === UsersService) {
           return mockedUserService;
+        }
+        if (token === FirebaseService) {
+          return mockedFirebaseServiceSuccess;
         }
 
         if (token === authConfig.KEY) {

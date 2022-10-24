@@ -35,6 +35,73 @@
           "length": 6,
           "mappedType": "datetime"
         },
+        "firebase_uuid": {
+          "name": "firebase_uuid",
+          "type": "varchar(50)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "mappedType": "string"
+        }
+      },
+      "name": "firebase_user",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "firebase_uuid"
+          ],
+          "composite": false,
+          "keyName": "firebase_user_firebase_uuid_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "firebase_user_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
         "password": {
           "name": "password",
           "type": "varchar(255)",
@@ -54,6 +121,15 @@
           "nullable": false,
           "length": 50,
           "mappedType": "string"
+        },
+        "firebase_user_id": {
+          "name": "firebase_user_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         }
       },
       "name": "user",
@@ -69,6 +145,15 @@
           "unique": true
         },
         {
+          "columnNames": [
+            "firebase_user_id"
+          ],
+          "composite": false,
+          "keyName": "user_firebase_user_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "user_pkey",
           "columnNames": [
             "id"
@@ -79,7 +164,21 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {}
+      "foreignKeys": {
+        "user_firebase_user_id_foreign": {
+          "constraintName": "user_firebase_user_id_foreign",
+          "columnNames": [
+            "firebase_user_id"
+          ],
+          "localTableName": "public.user",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.firebase_user",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
     }
   ]
 }

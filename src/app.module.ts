@@ -26,7 +26,6 @@ const envFilePath: string = getEnvPath(__dirname);
     DatabaseModule,
     UsersModule,
     AppLogerModule,
-    AppLogerModule,
     AuthModule,
     FirebaseModule,
   ],

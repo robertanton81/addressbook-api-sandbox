@@ -12,15 +12,31 @@ import { mockedUsersRepositorySuccess } from '../../users/repository/users.repos
 import { LogInDto } from '../dto/logIn.dto';
 import * as bcrypt from 'bcrypt';
 import { WrongCredentialsException } from '../../common/exceptions/wrong-credentials.exception';
+import { firebaseConfig } from '../../firebase/config/firebase.config';
+import { FirebaseService } from '../../firebase/service/firebase.service';
+import { FirebaseUsersRepository } from '../../firebase/repository/firebase-users.repository';
+import * as firebaseAdmin from 'firebase-admin';
 
 jest.mock('bcrypt');
+jest.mock('firebase-admin', () => {
+  return {
+    auth: jest.fn().mockReturnValue({
+      createUser: jest.fn(),
+    }),
+    credential: {
+      cert: jest.fn(),
+    },
+    initializeApp: jest.fn(),
+    firestore: jest.fn(),
+  };
+});
 
 describe('AuthService', () => {
   let service: AuthService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, UsersService],
+      providers: [AuthService, UsersService, FirebaseService],
     })
       .useMocker((token) => {
         if (token === JwtService) {
@@ -31,8 +47,16 @@ describe('AuthService', () => {
           return mockedUsersRepositorySuccess;
         }
 
+        if (token === FirebaseUsersRepository) {
+          return mockedUsersRepositorySuccess;
+        }
+
         if (token === authConfig.KEY) {
           return authConfigMock;
+        }
+
+        if (token === firebaseConfig.KEY) {
+          return firebaseConfig;
         }
 
         if (typeof token === 'function') {
@@ -49,11 +73,23 @@ describe('AuthService', () => {
   });
 
   describe('when registering user', () => {
+    let firebaseCreateUser: jest.SpyInstance;
+
     describe('and using valid data', () => {
+      beforeAll(() => {
+        firebaseCreateUser = jest
+          .spyOn(firebaseAdmin.auth(), 'createUser')
+          .mockResolvedValue({ uuid: 'test_firebase' } as any);
+      });
+
+      afterAll(() => {
+        firebaseCreateUser.mockRestore();
+      });
+
       it('should return access token', async () => {
         const createUserDto: CreateUserDto = {
           email: 'test@test.com',
-          password: 'tes3',
+          password: 'tes3asdfsdf',
         };
         const createdUser = await service.register(createUserDto);
 
@@ -65,13 +101,19 @@ describe('AuthService', () => {
   });
 
   describe('when signing in an user', () => {
-    let bcryptCompare: jest.Mock;
-    beforeEach(() => {
-      bcryptCompare = jest.fn().mockReturnValue(true);
-      (bcrypt.compare as jest.Mock) = bcryptCompare;
-    });
-
     describe('and using valid credentials', () => {
+      let bcryptCompare: jest.SpyInstance;
+
+      beforeEach(() => {
+        bcryptCompare = jest
+          .spyOn(bcrypt, 'compare')
+          .mockImplementation(() => true);
+      });
+
+      afterAll(() => {
+        bcryptCompare.mockRestore();
+      });
+
       it('should return access token', async () => {
         const createUserDto: LogInDto = {
           email: 'test@test.com',
@@ -86,8 +128,16 @@ describe('AuthService', () => {
     });
 
     describe('and using incorrect credentials', () => {
+      let bcryptCompare: jest.SpyInstance;
+
       beforeEach(() => {
-        bcryptCompare.mockReturnValue(false);
+        bcryptCompare = jest
+          .spyOn(bcrypt, 'compare')
+          .mockImplementation(() => false);
+      });
+
+      afterAll(() => {
+        bcryptCompare.mockRestore();
       });
 
       it('should throw unauthorised error', async () => {
@@ -104,13 +154,19 @@ describe('AuthService', () => {
   });
 
   describe('when authenticating an user', () => {
-    let bcryptCompare: jest.Mock;
-    beforeEach(() => {
-      bcryptCompare = jest.fn().mockReturnValue(true);
-      (bcrypt.compare as jest.Mock) = bcryptCompare;
-    });
-
     describe('and using valid credentials', () => {
+      let bcryptCompare: jest.SpyInstance;
+
+      beforeAll(() => {
+        bcryptCompare = jest
+          .spyOn(bcrypt, 'compare')
+          .mockImplementation(() => true);
+      });
+
+      afterAll(() => {
+        bcryptCompare.mockRestore();
+      });
+
       it('should return access token', async () => {
         const logInDto: LogInDto = {
           email: 'test@test.com',
@@ -118,13 +174,21 @@ describe('AuthService', () => {
         };
         const authUser = await service.login(logInDto);
 
-        expect(authUser).toMatchObject(authUser);
+        expect(authUser).toMatchObject({ accessToken: '' });
       });
     });
 
     describe('and using incorrect credentials', () => {
-      beforeEach(() => {
-        bcryptCompare.mockReturnValue(false);
+      let bcryptCompare: jest.SpyInstance;
+
+      beforeAll(() => {
+        bcryptCompare = jest
+          .spyOn(bcrypt, 'compare')
+          .mockImplementation(() => false);
+      });
+
+      afterAll(() => {
+        bcryptCompare.mockRestore();
       });
 
       it('should throw unauthorised error', async () => {
