@@ -23,9 +23,11 @@ describe('AuthController', () => {
         if (token === JwtService) {
           return mockedJwtService;
         }
+
         if (token === UsersService) {
           return mockedUserService;
         }
+
         if (token === FirebaseService) {
           return mockedFirebaseServiceSuccess;
         }

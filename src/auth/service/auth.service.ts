@@ -10,6 +10,7 @@ import { authConfig } from '../config/auth.config';
 import { WrongCredentialsException } from '../../common/exceptions/wrong-credentials.exception';
 import { User } from '../../users/entities/user.entity';
 import { FirebaseService } from '../../firebase/service/firebase.service';
+import TokenPayload from '../interfaces/token-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -70,6 +71,13 @@ export class AuthService {
     return {
       accessToken: this.getJwtAccessToken(registrationData.email),
     };
+  }
+
+  public async getUserFromAuthenticationToken(token: string) {
+    const payload: TokenPayload = this.jwtService.verify(token);
+    if (payload.email) {
+      return this.usersService.getByEmail(payload.email);
+    }
   }
 
   public getJwtAccessToken(email: string) {

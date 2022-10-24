@@ -1,20 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '../../users/entities/user.entity';
+import { FirebaseService } from '../../firebase/service/firebase.service';
 
 @Injectable()
 export class AddressBookService {
-  create() {
-    return 'This action adds a new addressBook';
-  }
-
-  findAll() {
-    return `This action returns all addressBook`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} addressBook`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} addressBook`;
-  }
+  constructor(private readonly fireBaseService: FirebaseService) {}
+  addContact(user: User) {}
 }

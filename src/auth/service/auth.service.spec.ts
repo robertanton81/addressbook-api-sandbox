@@ -16,6 +16,7 @@ import { firebaseConfig } from '../../firebase/config/firebase.config';
 import { FirebaseService } from '../../firebase/service/firebase.service';
 import { FirebaseUsersRepository } from '../../firebase/repository/firebase-users.repository';
 import * as firebaseAdmin from 'firebase-admin';
+import { mockedFirebaseUsersRepositorySuccess } from '../../firebase/repository/firebase-users.repository.mock-success';
 
 jest.mock('bcrypt');
 jest.mock('firebase-admin', () => {
@@ -48,7 +49,7 @@ describe('AuthService', () => {
         }
 
         if (token === FirebaseUsersRepository) {
-          return mockedUsersRepositorySuccess;
+          return mockedFirebaseUsersRepositorySuccess;
         }
 
         if (token === authConfig.KEY) {
