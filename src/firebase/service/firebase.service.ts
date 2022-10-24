@@ -2,10 +2,9 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { firebaseConfig } from '../config/firebase.config';
 import * as admin from 'firebase-admin';
-import serviceAccount from '../config/firebase-adminsdk-strv-address-book.json';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { CatchAll } from '../../common/decorators/try-catch-decorator';
-import { App } from 'firebase-admin/app';
+import { App, applicationDefault } from 'firebase-admin/app';
 import { Auth } from 'firebase-admin/auth';
 import { AddContactDto } from '../../address-book/dto/add-contact.dto';
 
@@ -31,7 +30,7 @@ export class FirebaseService {
   })
   private getFirebaseApp() {
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+      credential: applicationDefault(),
       databaseURL: this.firebaseConfigService.DATABASE_URL,
     });
   }
