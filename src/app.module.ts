@@ -11,6 +11,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { authConfig } from './auth/config/auth.config';
 import { FirebaseModule } from './firebase/firebase.module';
+import { AddressBookModule } from './address-book/address-book.module';
 
 const envFilePath: string = getEnvPath(__dirname);
 
@@ -28,6 +29,7 @@ const envFilePath: string = getEnvPath(__dirname);
     AppLogerModule,
     AuthModule,
     FirebaseModule,
+    AddressBookModule,
   ],
   controllers: [],
   providers: [

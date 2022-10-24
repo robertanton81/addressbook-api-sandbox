@@ -35,6 +35,193 @@
           "length": 6,
           "mappedType": "datetime"
         },
+        "password": {
+          "name": "password",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(50)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "mappedType": "string"
+        }
+      },
+      "name": "address_book",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "email"
+          ],
+          "composite": false,
+          "keyName": "address_book_email_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "address_book_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "address": {
+          "name": "address",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "address_book_id": {
+          "name": "address_book_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "contact",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "contact_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "contact_address_book_id_foreign": {
+          "constraintName": "contact_address_book_id_foreign",
+          "columnNames": [
+            "address_book_id"
+          ],
+          "localTableName": "public.contact",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.address_book",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz(6)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
         "firebase_uuid": {
           "name": "firebase_uuid",
           "type": "varchar(50)",
