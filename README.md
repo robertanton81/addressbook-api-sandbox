@@ -1,15 +1,29 @@
-# TODO:
+## TODO:
 -  more tests
 -  more error handling
 - CI/CD
 - dockerize all the things
-- - db
-- - app
+- - [x] db
+- - [x] app
 - - firebaseEmulators
 - compose them
+- - fix failing docker-compose due OpenApi error
+- - more swagger
 
-# localy e2e tests run against firebase emulators
+### to run the app localy
+`npm install && npm run start`
+or
+`start:dev`
+or
+`start:debug`
+- local postgres is expected
+
+### to run e2e scripts against docker database run
+<`npm run test:e2e:docker`>
+
+### localy e2e tests run against firebase emulators
  - firebase cli setup is necessary
+run `firebase emulators:exec "npm run test:e2e""` // or with dockerised db `test:e2e:docker`
 
 # This app is
 ## using:

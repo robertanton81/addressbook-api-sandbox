@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:e2e:docker": "npx mikro-orm cache:generate && docker compose -f docker-compose.e2e.yml up --abort-on-container-exit --exit-code-from strv-addressbook-api"
+    "test:e2e:docker": "npx mikro-orm cache:generate && docker compose -f docker-compose.e2e.yml up --abort-on-container-exit --exit-code-from strv-addressbook-api",
+    "start:dev:docker": "npm run build && npx mikro-orm cache:generate && docker compose -f docker-compose.yml up"
   },
   "dependencies": {
     "@fastify/helmet": "^10.0.2",
