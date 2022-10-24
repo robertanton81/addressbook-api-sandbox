@@ -1,14 +1,15 @@
 ## TODO:
--  more tests
--  more error handling
-- CI/CD
-- dockerize all the things
+- - [ ] finish gcp deployment
+- - [ ] link to managed gcp postgres
+- - [ ] add security rules to firestore
+- - [ ] more tests
+- - [ ] more error handling
+- - [x] CI/CD
+- - [ ] dockerize all the things with firebase emulators
 - - [x] db
 - - [x] app
-- - firebaseEmulators
-- compose them
-- - fix failing docker-compose due OpenApi error
-- - more swagger
+- - [ ] fix failing docker-compose running app due OpenApi error
+- - [ ] add missing swagger docs
 
 ### to run the app localy
 `npm install && npm run start`
@@ -17,6 +18,8 @@ or
 or
 `start:debug`
 - local postgres is expected
+
+### to see api documentation, to to `your-url:port/api`
 
 ### to run e2e scripts against docker database run
 <`npm run test:e2e:docker`>
