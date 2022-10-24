@@ -1,6 +1,6 @@
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
-import { Logger } from '@nestjs/common';
+import { Logger, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { dbConfig, validateDbConfig } from './database/database.config';
 import { Options } from '@mikro-orm/core';
@@ -17,6 +17,9 @@ validateDbConfig(dbConfig());
 
 const mikroOrmConfig: Options = {
   type: 'postgresql',
+  // @ts-ignore
+  registerRequestContext: false, // disable the automatic context
+  scope: Scope.REQUEST, // use nestjs request scopes instead
   dbName: configService.get('POSTGRES_DB'),
   user: configService.get('POSTGRES_USER'),
   password: configService.get('POSTGRES_PASSWORD'),

@@ -14,23 +14,11 @@ import * as bcrypt from 'bcrypt';
 import { WrongCredentialsException } from '../../common/exceptions/wrong-credentials.exception';
 import { firebaseConfig } from '../../firebase/config/firebase.config';
 import { FirebaseService } from '../../firebase/service/firebase.service';
-import { FirebaseUsersRepository } from '../../firebase/repository/firebase-users.repository';
 import * as firebaseAdmin from 'firebase-admin';
-import { mockedFirebaseUsersRepositorySuccess } from '../../firebase/repository/firebase-users.repository.mock-success';
+import { setFirebaseMock } from '../../firebase/firebase.mock';
 
 jest.mock('bcrypt');
-jest.mock('firebase-admin', () => {
-  return {
-    auth: jest.fn().mockReturnValue({
-      createUser: jest.fn(),
-    }),
-    credential: {
-      cert: jest.fn(),
-    },
-    initializeApp: jest.fn(),
-    firestore: jest.fn(),
-  };
-});
+setFirebaseMock();
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -46,10 +34,6 @@ describe('AuthService', () => {
 
         if (token === UsersRepository) {
           return mockedUsersRepositorySuccess;
-        }
-
-        if (token === FirebaseUsersRepository) {
-          return mockedFirebaseUsersRepositorySuccess;
         }
 
         if (token === authConfig.KEY) {

@@ -12,7 +12,7 @@ import { configureSwagger } from './config/swagger/configure-swagger';
 import { configureLogger } from './config/logger/configure.logger';
 import { configureDb } from './database/configure.database';
 
-// TODO: add HMR webpack
+// TODO: add webpack for HMR
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -27,7 +27,6 @@ async function bootstrap() {
   await configureDb(app, logger);
   // setup globally basic security headers
   await app.register(fastifyHelmet);
-
   // setup validation pipes for every endpoint
   app.useGlobalPipes(
     new ValidationPipe({

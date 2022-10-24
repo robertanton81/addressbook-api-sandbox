@@ -7,14 +7,12 @@ import { authConfig } from './config/auth.config';
 import { AuthController } from './controller/auth.controller';
 import { AuthService } from './service/auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { FirebaseModule } from '../firebase/firebase.module';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     ConfigModule,
-    FirebaseModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [authConfig.KEY, ConfigService],

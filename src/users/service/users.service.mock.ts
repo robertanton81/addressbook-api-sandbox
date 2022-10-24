@@ -6,4 +6,7 @@ export const mockedUserService = {
       ...dto,
     });
   }),
+  update: jest.fn().mockImplementation((args) => {
+    return Promise.resolve({ ...args });
+  }),
 };

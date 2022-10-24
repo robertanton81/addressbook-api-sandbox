@@ -1,11 +1,9 @@
-import { CreateFirebaseUserDto } from '../dto/create-firebase-user.dto';
+import { CreateUserDto } from '../../users/dto/create-user.dto';
 
 export const mockedFirebaseServiceSuccess = {
-  createFirebaseUser: jest
-    .fn()
-    .mockImplementation((dto: CreateFirebaseUserDto) => {
-      return Promise.resolve({
-        ...dto,
-      });
-    }),
+  createFirebaseUser: jest.fn().mockImplementation((dto: CreateUserDto) => {
+    return Promise.resolve({
+      ...dto,
+    });
+  }),
 };

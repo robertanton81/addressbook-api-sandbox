@@ -1,7 +1,6 @@
 import {
   Entity,
   EntityRepositoryType,
-  OneToOne,
   Property,
   Unique,
 } from '@mikro-orm/core';
@@ -9,7 +8,6 @@ import { BaseEntity } from '../../common/entities/base.entity';
 import { UsersRepository } from '../repository/users.repository';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { FirebaseUser } from '../../firebase/entities/firebase-user.entity';
 
 @Entity({ customRepository: () => UsersRepository })
 export class User extends BaseEntity {
@@ -26,6 +24,7 @@ export class User extends BaseEntity {
   email: string;
 
   @ApiProperty()
-  @OneToOne({ nullable: true, inversedBy: 'appUser' })
-  firebaseUser: FirebaseUser;
+  @Property({ hidden: true, nullable: true })
+  @Exclude()
+  firebaseUid?: string;
 }

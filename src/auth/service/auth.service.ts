@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../../users/service/users.service';
@@ -9,7 +9,6 @@ import { ConfigType } from '@nestjs/config';
 import { authConfig } from '../config/auth.config';
 import { WrongCredentialsException } from '../../common/exceptions/wrong-credentials.exception';
 import { User } from '../../users/entities/user.entity';
-import { FirebaseService } from '../../firebase/service/firebase.service';
 import TokenPayload from '../interfaces/token-payload.interface';
 
 @Injectable()
@@ -17,7 +16,6 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
-    private readonly firebaseService: FirebaseService,
     @Inject(authConfig.KEY)
     private authConfigService: ConfigType<typeof authConfig>,
   ) {}
@@ -52,21 +50,10 @@ export class AuthService {
     registrationData: RegisterUserDto,
   ): Promise<RegisterUserResponseDto> {
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
-
-    const fireBAseUser = await this.firebaseService.createFirebaseUser(
-      registrationData,
-    );
-
-    if (fireBAseUser.uid) {
-      // todo: need to create user in transaction and persist only when firebase succeeds
-      const userInstance = await this.usersService.create({
-        ...registrationData,
-        password: hashedPassword,
-        firebaseUser: {
-          firebaseUuid: fireBAseUser.uid,
-        },
-      });
-    }
+    await this.usersService.create({
+      ...registrationData,
+      password: hashedPassword,
+    });
 
     return {
       accessToken: this.getJwtAccessToken(registrationData.email),
@@ -76,7 +63,9 @@ export class AuthService {
   public async getUserFromAuthenticationToken(token: string) {
     const payload: TokenPayload = this.jwtService.verify(token);
     if (payload.email) {
-      return this.usersService.getByEmail(payload.email);
+      return await this.usersService.getByEmail(payload.email);
+    } else {
+      throw new BadRequestException();
     }
   }
 

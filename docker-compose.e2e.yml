@@ -1,0 +1,42 @@
+services:
+  strv-addressbook-api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+    - .env.e2e-docker-compose
+    # Run a command against the development stage of the image
+    command: npm run test:e2e
+    ports:
+      - 3008:3008
+    networks:
+      - strv-addressbook
+    depends_on:
+      - postgres
+
+
+  postgres:
+    image: postgres
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 30s
+      timeout: 30s
+      retries: 3  
+    env_file:
+      - .env.e2e-docker-compose
+    ports:
+      - 5435:5432
+    networks:
+      - strv-addressbook
+    volumes:
+      - strv-nest-postgres:/var/lib/postgresql/data
+  
+volumes:
+  strv-nest-postgres:
+networks:
+  strv-addressbook:

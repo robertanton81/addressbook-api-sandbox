@@ -8,6 +8,11 @@ import { functionMocker } from '../../common/mocks/mocker.helper';
 describe('UsersService', () => {
   let service: UsersService;
 
+  const createUserDto: CreateUserDto = {
+    email: 'test@test.com',
+    password: 'tes3',
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService],
@@ -31,10 +36,6 @@ describe('UsersService', () => {
   });
 
   it('should create user', async () => {
-    const createUserDto: CreateUserDto = {
-      email: 'test@test.com',
-      password: 'tes3',
-    };
     const createdUser = await service.create(createUserDto);
 
     expect(createdUser).toMatchObject(createUserDto);

@@ -2,21 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AddressBookService } from './address-book.service';
 import { FirebaseService } from '../../firebase/service/firebase.service';
 import { firebaseConfig } from '../../firebase/config/firebase.config';
-import { FirebaseUsersRepository } from '../../firebase/repository/firebase-users.repository';
-import { mockedFirebaseUsersRepositorySuccess } from '../../firebase/repository/firebase-users.repository.mock-success';
+import { UsersService } from '../../users/service/users.service';
+import { mockedUserService } from '../../users/service/users.service.mock';
+import { setFirebaseMock } from '../../firebase/firebase.mock';
 
-jest.mock('firebase-admin', () => {
-  return {
-    auth: jest.fn().mockReturnValue({
-      createUser: jest.fn(),
-    }),
-    credential: {
-      cert: jest.fn(),
-    },
-    initializeApp: jest.fn(),
-    firestore: jest.fn(),
-  };
-});
+setFirebaseMock();
 
 describe('AddressBookService', () => {
   let service: AddressBookService;
@@ -29,9 +19,8 @@ describe('AddressBookService', () => {
         if (token === firebaseConfig.KEY) {
           return firebaseConfig;
         }
-
-        if (token === FirebaseUsersRepository) {
-          return mockedFirebaseUsersRepositorySuccess;
+        if (token === UsersService) {
+          return mockedUserService;
         }
       })
       .compile();
