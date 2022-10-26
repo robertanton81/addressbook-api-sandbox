@@ -11,6 +11,7 @@ export class BaseRepository<T> extends EntityRepository<T> {
   }
 
   update(data: Record<string, any>, entity: T) {
-    return wrap(entity).assign(data);
+    wrap(entity).assign(data);
+    return super.flush();
   }
 }

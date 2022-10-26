@@ -1,14 +1,20 @@
 import { registerAs } from '@nestjs/config';
-import { IsString } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 import { validateConfig } from '../../common/validation/config.validate';
 
 const firebaseConfig = registerAs('firebase', () => ({
-  DATABASE_URL: process.env.DATABASE_URL,
+  FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+  FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+  FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
 }));
 
 class EnvironmentVariables {
   @IsString()
-  DATABASE_URL: string;
+  FIREBASE_PROJECT_ID: string;
+  @IsString()
+  FIREBASE_PRIVATE_KEY: string;
+  @IsEmail()
+  FIREBASE_CLIENT_EMAIL: string;
 }
 
 const validateFirebaseConfig = (config: Record<string, unknown>) =>

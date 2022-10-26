@@ -4,5 +4,5 @@ import { CreateUserDto } from './create-user.dto';
 export class UpdateUserDto extends CreateUserDto {
   @IsOptional()
   @IsString()
-  firebaseUid: string;
+  firebaseUid?: string;
 }

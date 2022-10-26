@@ -4,7 +4,6 @@ import { User } from '../entities/user.entity';
 import { CatchNotFoundException } from '../../common/decorators/catch-not-found.decorator';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { wrap } from '@mikro-orm/core';
 
 @Injectable()
 export class UsersService {

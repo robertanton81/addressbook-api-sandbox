@@ -4,7 +4,7 @@ import { firebaseConfig } from '../config/firebase.config';
 import * as admin from 'firebase-admin';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { CatchAll } from '../../common/decorators/try-catch-decorator';
-import { App, applicationDefault } from 'firebase-admin/app';
+import { App, applicationDefault, cert } from 'firebase-admin/app';
 import { Auth } from 'firebase-admin/auth';
 import { AddContactDto } from '../../address-book/dto/add-contact.dto';
 
@@ -19,7 +19,7 @@ export class FirebaseService {
     @Inject(firebaseConfig.KEY)
     private firebaseConfigService: ConfigType<typeof firebaseConfig>,
   ) {
-    this.getFirebaseApp();
+    this.firebaseApp = this.getFirebaseApp();
     this.firestore = admin.firestore();
     this.firebaseAuth = admin.auth();
     this.contactsDb = admin.firestore().collection('contacts');
@@ -29,9 +29,12 @@ export class FirebaseService {
     throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
   })
   private getFirebaseApp() {
-    admin.initializeApp({
-      credential: applicationDefault(),
-      databaseURL: this.firebaseConfigService.DATABASE_URL,
+    return admin.initializeApp({
+      credential: cert({
+        projectId: this.firebaseConfigService.FIREBASE_PROJECT_ID,
+        clientEmail: this.firebaseConfigService.FIREBASE_CLIENT_EMAIL,
+        privateKey: this.firebaseConfigService.FIREBASE_PRIVATE_KEY,
+      }),
     });
   }
 
