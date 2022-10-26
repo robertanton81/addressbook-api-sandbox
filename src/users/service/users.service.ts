@@ -22,7 +22,7 @@ export class UsersService {
   }
 
   async updateUser(data: Partial<UpdateUserDto>, user: User) {
-    return wrap(user).assign(data);
+    return this.userRepository.update(data, user);
   }
 
   @CatchNotFoundException()

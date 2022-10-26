@@ -1,10 +1,12 @@
 import { existsSync } from 'fs';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 
 export function getEnvPath(workingDir: string): string {
-  const dest = `${workingDir}/config/envs`;
+  const folder = path.basename(workingDir);
+  const wd = process.cwd();
+  const dest = `${folder}/config/envs`;
   const env: string | undefined = process.env.NODE_ENV;
-  const fallback: string = resolve(`${dest}/.env`);
+  const fallback: string = resolve(`${wd}/src/${dest}/.env`);
   const filename: string = env ? `.env.${env}` : '.env';
   let filePath: string = resolve(`${dest}/${filename}`);
 

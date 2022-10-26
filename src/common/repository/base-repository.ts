@@ -1,3 +1,4 @@
+import { wrap } from '@mikro-orm/core';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { CatchUniqueConstraintViolation } from '../decorators/catch-unique-constraint-violation.decorator';
 
@@ -7,5 +8,9 @@ export class BaseRepository<T> extends EntityRepository<T> {
   @CatchUniqueConstraintViolation()
   persistAndFlush(entity: T | T[]): Promise<void> {
     return super.persistAndFlush(entity);
+  }
+
+  update(data: Record<string, any>, entity: T) {
+    return wrap(entity).assign(data);
   }
 }

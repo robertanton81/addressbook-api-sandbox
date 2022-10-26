@@ -14,6 +14,7 @@ import { AuthService } from '../../auth/service/auth.service';
 import { ExtractJwt } from 'passport-jwt';
 import { AddContactDto } from '../dto/add-contact.dto';
 import { CatchAll } from '../../common/decorators/try-catch-decorator';
+import { ApiAcceptedResponse } from '@nestjs/swagger';
 
 @Controller('address-book')
 export class AddressBookController {
